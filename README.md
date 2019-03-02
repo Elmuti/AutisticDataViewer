@@ -10,4 +10,4 @@ Viewer/Editor for listing scientific publications etc.
 - Save File:   Ctrl + S
 - Copy Entry:  Ctrl + C
 - Paste Entry: Ctrl + V
-- New Entry:   Delete
+- Delete Entry:   Delete
