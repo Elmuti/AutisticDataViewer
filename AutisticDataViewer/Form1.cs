@@ -23,6 +23,7 @@ namespace AutisticDataViewer
         private int LatestEntryId = 1;
         private bool CtrlDown = false;
         private AutisticData CurrentCopy;
+        private string CurrentSavePath;
 
         private void KeyDown_Global(object sender, System.Windows.Forms.KeyEventArgs e)
         {
@@ -31,13 +32,25 @@ namespace AutisticDataViewer
                 CtrlDown = true;
             }
             //MessageBox.Show("ctrldown: " + CtrlDown.ToString() + ", key: " + e.KeyCode.ToString());
-            if (CtrlDown && e.KeyCode == Keys.C)
+            if (CtrlDown && e.KeyCode == Keys.C && !HaveTextBoxFocused())
             {
                 CopyEntry();
             }
-            else if (CtrlDown && e.KeyCode == Keys.V)
+            else if (CtrlDown && e.KeyCode == Keys.V && !HaveTextBoxFocused())
             {
                 PasteEntry();
+            }
+            else if (CtrlDown && e.KeyCode == Keys.N)
+            {
+                CreateNew();
+            }
+            else if (CtrlDown && e.KeyCode == Keys.O)
+            {
+                Open();
+            }
+            else if (CtrlDown && e.KeyCode == Keys.S)
+            {
+                Save();
             }
         }
 
@@ -61,7 +74,8 @@ namespace AutisticDataViewer
                     {
                         if (d.EntryName == SelectedNode.Text)
                         {
-                            CurrentCopy = d;
+                            CurrentCopy = ObjectCopier.Clone(d);
+                            CurrentCopy.EntryName = CurrentCopy.EntryName + " (copy)";
                             break;
                         }
                     }
@@ -113,7 +127,7 @@ namespace AutisticDataViewer
             }
         }
 
-        private void Save()
+        private void SaveAs()
         {
             saveFileDialog1.Filter = "Binary File|*.bin";
             saveFileDialog1.Title = "Save File";
@@ -153,41 +167,90 @@ namespace AutisticDataViewer
                         binaryFormatter.Serialize(binaryFile, CurrentData);
                         binaryFile.Flush();
                     }
+
+                    CurrentSavePath = saveFileDialog1.FileName;
+                    MessageBox.Show("Saved successfully!");
                 }
+            }
+        }
+
+        private void Save()
+        {
+            if (CurrentSavePath == null)
+            {
+                SaveAs();
+            }
+            else
+            {
+                //save text to dictionary entry
+                if (SelectedNode.Level == 1)
+                {
+                    foreach (KeyValuePair<string, List<AutisticData>> pair in CurrentData)
+                    {
+                        foreach (AutisticData d in pair.Value)
+                        {
+                            if (d.EntryName == SelectedNode.Text)
+                            {
+                                d.EntryName = richTextBox1.Text;
+                                d.Source = richTextBox2.Text;
+                                d.Author = richTextBox5.Text;
+                                d.Keywords = richTextBox4.Text;
+                                d.RealName = richTextBox7.Text;
+                                d.DateAdded = richTextBox6.Text;
+                                d.Notes = richTextBox3.Text;
+                                Console.WriteLine("Saved textboxes to dictionary");
+                            }
+                        }
+                    }
+                }
+
+                var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+
+                var fi = new FileInfo(CurrentSavePath);
+
+                using (var binaryFile = fi.Create())
+                {
+                    binaryFormatter.Serialize(binaryFile, CurrentData);
+                    binaryFile.Flush();
+                }
+                MessageBox.Show("Saved successfully!");
             }
         }
 
         private void Open()
         {
-            openFileDialog1.Filter = "Binary File|*.bin";
-            openFileDialog1.Title = "Select a File";
-
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (MessageBox.Show("Are you sure? You will lose current progress.", "Creating a new file", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                if (openFileDialog1.FileName != "" && File.Exists(openFileDialog1.FileName))
+                openFileDialog1.Filter = "Binary File|*.bin";
+                openFileDialog1.Title = "Select a File";
+
+                if (openFileDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    richTextBox1.Text = ""; //entry name
-                    richTextBox2.Text = ""; //source
-                    richTextBox5.Text = ""; //authors
-                    richTextBox4.Text = ""; //keywords
-                    richTextBox7.Text = ""; //real name
-                    richTextBox6.Text = ""; //date added
-                    richTextBox3.Text = ""; //notes
-                    treeView1.Nodes.Clear();
-                    LatestEntryId = 1;
-                    LatestFolderId = 1;
-                    SelectedNode = null;
-
-                    var fi = new FileInfo(openFileDialog1.FileName);
-                    var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                    using (var binaryFile = fi.OpenRead())
+                    if (openFileDialog1.FileName != "" && File.Exists(openFileDialog1.FileName))
                     {
-                        CurrentData = (Dictionary<string, List<AutisticData>>)binaryFormatter.Deserialize(binaryFile);
-                        this.Text = "Autistic Data Viewer - " + openFileDialog1.FileName;
-                    }
+                        richTextBox1.Text = ""; //entry name
+                        richTextBox2.Text = ""; //source
+                        richTextBox5.Text = ""; //authors
+                        richTextBox4.Text = ""; //keywords
+                        richTextBox7.Text = ""; //real name
+                        richTextBox6.Text = ""; //date added
+                        richTextBox3.Text = ""; //notes
+                        treeView1.Nodes.Clear();
+                        LatestEntryId = 1;
+                        LatestFolderId = 1;
+                        SelectedNode = null;
 
-                    SetTreeFromData();
-                    treeView1.ExpandAll();
+                        var fi = new FileInfo(openFileDialog1.FileName);
+                        var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                        using (var binaryFile = fi.OpenRead())
+                        {
+                            CurrentData = (Dictionary<string, List<AutisticData>>)binaryFormatter.Deserialize(binaryFile);
+                            this.Text = "Autistic Data Viewer - " + openFileDialog1.FileName;
+                        }
+
+                        SetTreeFromData();
+                        treeView1.ExpandAll();
+                    }
                 }
             }
         }
@@ -210,15 +273,50 @@ namespace AutisticDataViewer
             Save();
         }
 
+        private void SaveAs_Click(object sender, EventArgs e)
+        {
+            SaveAs();
+        }
+
         private void RenameFld_Click(object sender, EventArgs e)
         {
             if (SelectedNode.Level == 0)
             {
                 string input = Microsoft.VisualBasic.Interaction.InputBox("Folder Name:", "Rename Folder", "New Folder " + LatestFolderId.ToString(), -1, -1);
+
+                foreach (TreeNode fld in treeView1.Nodes)
+                {
+                    if (fld.Text == input)
+                    {
+                        MessageBox.Show("Cannot have duplicate names on folders!");
+                        return;
+                    }
+                }
+                if (SelectedNode.Text == input)
+                {
+                    MessageBox.Show("Cannot have duplicate names on folders!");
+                    return;
+                }
+
                 CurrentData.Add(input, CurrentData[SelectedNode.Text]);
                 CurrentData.Remove(SelectedNode.Text);
                 SelectedNode.Text = input;
             }
+        }
+        
+        private bool HaveTextBoxFocused()
+        {
+            if (richTextBox1.Focused ||
+            richTextBox2.Focused ||
+            richTextBox5.Focused ||
+            richTextBox4.Focused ||
+            richTextBox7.Focused ||
+            richTextBox6.Focused ||
+            richTextBox3.Focused)
+            {
+                return true;
+            }
+            return false;
         }
 
         private void RenameEntry_Click(object sender, EventArgs e)
@@ -226,6 +324,25 @@ namespace AutisticDataViewer
             if (SelectedNode.Level == 1)
             {
                 string input = Microsoft.VisualBasic.Interaction.InputBox("Entry Name:", "Rename Entry", "New Entry " + LatestEntryId.ToString(), -1, -1);
+
+
+                foreach(TreeNode fld in treeView1.Nodes)
+                {
+                    foreach(TreeNode entry in fld.Nodes)
+                    {
+                        if (entry.Text == input)
+                        {
+                            MessageBox.Show("Cannot have duplicate names on entries!");
+                            return;
+                        }
+                    }
+                }
+                if (SelectedNode.Text == input)
+                {
+                    MessageBox.Show("Cannot have duplicate names on entries!");
+                    return;
+                }
+
                 GetEntry(SelectedNode.Parent.Text, SelectedNode.Index).EntryName = input;
                 richTextBox1.Text = input;
                 SelectedNode.Text = input;

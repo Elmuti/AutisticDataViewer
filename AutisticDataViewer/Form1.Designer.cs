@@ -51,12 +51,14 @@
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.printToReadableFormatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -75,7 +77,7 @@
             this.richTextBox1.Location = new System.Drawing.Point(529, 29);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.Size = new System.Drawing.Size(617, 26);
-            this.richTextBox1.TabIndex = 1;
+            this.richTextBox1.TabIndex = 5;
             this.richTextBox1.Text = "";
             this.richTextBox1.TextChanged += new System.EventHandler(this.EntryName_Changed);
             // 
@@ -111,7 +113,7 @@
             this.richTextBox2.Location = new System.Drawing.Point(529, 61);
             this.richTextBox2.Name = "richTextBox2";
             this.richTextBox2.Size = new System.Drawing.Size(617, 26);
-            this.richTextBox2.TabIndex = 5;
+            this.richTextBox2.TabIndex = 6;
             this.richTextBox2.Text = "";
             // 
             // richTextBox3
@@ -119,7 +121,7 @@
             this.richTextBox3.Location = new System.Drawing.Point(500, 261);
             this.richTextBox3.Name = "richTextBox3";
             this.richTextBox3.Size = new System.Drawing.Size(646, 388);
-            this.richTextBox3.TabIndex = 6;
+            this.richTextBox3.TabIndex = 11;
             this.richTextBox3.Text = "";
             // 
             // richTextBox4
@@ -127,7 +129,7 @@
             this.richTextBox4.Location = new System.Drawing.Point(529, 125);
             this.richTextBox4.Name = "richTextBox4";
             this.richTextBox4.Size = new System.Drawing.Size(617, 26);
-            this.richTextBox4.TabIndex = 15;
+            this.richTextBox4.TabIndex = 8;
             this.richTextBox4.Text = "";
             // 
             // label9
@@ -153,7 +155,7 @@
             this.richTextBox5.Location = new System.Drawing.Point(529, 93);
             this.richTextBox5.Name = "richTextBox5";
             this.richTextBox5.Size = new System.Drawing.Size(617, 26);
-            this.richTextBox5.TabIndex = 12;
+            this.richTextBox5.TabIndex = 7;
             this.richTextBox5.Text = "";
             // 
             // richTextBox6
@@ -161,7 +163,7 @@
             this.richTextBox6.Location = new System.Drawing.Point(529, 209);
             this.richTextBox6.Name = "richTextBox6";
             this.richTextBox6.Size = new System.Drawing.Size(617, 26);
-            this.richTextBox6.TabIndex = 19;
+            this.richTextBox6.TabIndex = 10;
             this.richTextBox6.Text = "";
             // 
             // label11
@@ -187,7 +189,7 @@
             this.richTextBox7.Location = new System.Drawing.Point(529, 157);
             this.richTextBox7.Name = "richTextBox7";
             this.richTextBox7.Size = new System.Drawing.Size(617, 46);
-            this.richTextBox7.TabIndex = 16;
+            this.richTextBox7.TabIndex = 9;
             this.richTextBox7.Text = "";
             // 
             // openFileDialog1
@@ -210,7 +212,8 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newToolStripMenuItem,
             this.openToolStripMenuItem,
-            this.saveToolStripMenuItem});
+            this.saveToolStripMenuItem,
+            this.saveAsToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -218,23 +221,30 @@
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
-            this.newToolStripMenuItem.Text = "New";
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.newToolStripMenuItem.Text = "New               (Ctrl + N)";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.New_Click);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
-            this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.openToolStripMenuItem.Text = "Open             (Ctrl + O)";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.Open_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
-            this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.saveToolStripMenuItem.Text = "Save               (Ctrl + S)";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.Save_Click);
+            // 
+            // saveAsToolStripMenuItem
+            // 
+            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.saveAsToolStripMenuItem.Text = "Save as        ";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveAs_Click);
             // 
             // optionsToolStripMenuItem
             // 
@@ -256,7 +266,7 @@
             this.button1.Location = new System.Drawing.Point(13, 643);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(81, 23);
-            this.button1.TabIndex = 21;
+            this.button1.TabIndex = 1;
             this.button1.Text = "Add Folder";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.AddFolder);
@@ -266,7 +276,7 @@
             this.button2.Location = new System.Drawing.Point(100, 643);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 22;
+            this.button2.TabIndex = 2;
             this.button2.Text = "Add Entry";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.AddEntry);
@@ -277,7 +287,7 @@
             this.button3.Location = new System.Drawing.Point(325, 643);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(104, 23);
-            this.button3.TabIndex = 23;
+            this.button3.TabIndex = 4;
             this.button3.Text = "Rename Folder";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.RenameFld_Click);
@@ -288,16 +298,27 @@
             this.button4.Location = new System.Drawing.Point(229, 643);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(89, 23);
-            this.button4.TabIndex = 24;
+            this.button4.TabIndex = 3;
             this.button4.Text = "Rename Entry";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.RenameEntry_Click);
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(924, 661);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(222, 13);
+            this.linkLabel1.TabIndex = 21;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "https://github.com/Elmuti/AutisticDataViewer";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1158, 683);
+            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
@@ -364,6 +385,8 @@
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem printToReadableFormatToolStripMenuItem;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }
 

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace GregorDataViewer.Properties
+namespace AutisticDataViewer.Properties
 {
 
 
